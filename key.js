@@ -27,6 +27,9 @@ function keyLambda(ev, broadcast) {
     }
 
     if (ev.keyCode === key && hasModifier) {
+        if (this.opts.preventDefault && ev.preventDefault) {
+            ev.preventDefault();
+        }
         broadcast(this.data);
     }
 }
