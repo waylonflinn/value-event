@@ -2,34 +2,21 @@ var BaseEvent = require('./base-event.js');
 
 module.exports = BaseEvent(keyLambda);
 
-var base = {};
-base.SHIFT = 16;
-base.CONTROL = 17;
-base.ALT = 18;
-base.OPTION = base.ALT;
-base.META = 224;
-base.COMMAND = base.META;
-
-var properties = {};
-properties[base.SHIFT] = "shiftKey";
-properties[base.CONTROL] = "ctrlKey";
-properties[base.ALT] = "altKey";
-properties[base.META] = "metaKey";
-
 
 function keyLambda(ev, broadcast) {
-    var key = this.opts.key,
-        hasModifier = true;
+    var key = this.opts.key;
 
-    if(this.opts.modifier){
-        var eventProperty = properties[this.opts.modifier];
-        hasModifier = ev[eventProperty];
+    if (ev.keyCode !== key) return;
+
+    if (this.opts.alt !== void(0) && this.opts.alt !== ev.altKey) return;
+    if (this.opts.ctrl !== void(0) && this.opts.ctrl !== ev.ctrlKey) return;
+    if (this.opts.meta !== void(0) && this.opts.meta !== ev.metaKey) return;
+    if (this.opts.shift !== void(0) && this.opts.shift !== ev.shiftKey) return;
+
+    if (this.opts.preventDefault && ev.preventDefault) {
+        ev.preventDefault();
     }
 
-    if (ev.keyCode === key && hasModifier) {
-        if (this.opts.preventDefault && ev.preventDefault) {
-            ev.preventDefault();
-        }
-        broadcast(this.data);
-    }
+    broadcast(this.data);
+
 }
